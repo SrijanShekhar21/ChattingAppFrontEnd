@@ -10,6 +10,9 @@ import attachFile from "../assets/attach-file.png";
 import gallery from "../assets/gallery.png";
 import headphones from "../assets/headphones.png";
 import documents from "../assets/google-docs.png";
+import cubes from "../assets/cubes.png";
+import bricks from "../assets/bricks.png";
+import geometry from "../assets/geometry.png";
 import PreviewDiv from "./PreviewDiv";
 import FileMsgDiv from "./FileMsgDiv";
 
@@ -270,7 +273,12 @@ function ChatComponent() {
           </div>
 
           <div className="chatComponentMidDiv">
-            <div className="chatComponentMid">
+            <div
+              style={{
+                backgroundImage: `url(${geometry})`,
+              }}
+              className="chatComponentMid"
+            >
               {messages.map((msg, index) => {
                 return (
                   ((msg.from_user == userEmail &&
