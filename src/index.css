@@ -1164,6 +1164,17 @@ body {
   .app {
     height: 90vh;
   }
+
+  .creator h3 {
+    /* border: 2px solid black; */
+    margin: 0;
+    padding: 0;
+  }
+  .creator p {
+    /* border: 2px solid black; */
+    margin: 0;
+    padding: 0;
+  }
   .dashLeft {
     position: absolute;
     width: calc(100% - 1rem);
