@@ -20,6 +20,7 @@ body {
   height: 100vh;
   overflow-y: hidden;
   overflow-x: hidden;
+  border: 2px solid red;
 }
 
 .home {
@@ -1161,6 +1162,9 @@ body {
 }
 
 @media screen and (max-width: 550px) {
+  .app {
+    height: 90vh;
+  }
   .dashLeft {
     position: absolute;
     width: calc(100% - 1rem);
