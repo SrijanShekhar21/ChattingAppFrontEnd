@@ -1163,10 +1163,20 @@ body {
 @media screen and (max-width: 550px) {
   .app {
     height: 90vh;
+    border: 2px solid red;
   }
 
   .home {
     justify-content: flex-start;
+  }
+
+  .home h1 {
+    margin: 0;
+  }
+
+  .homeFeatures {
+    padding-top: 0;
+    padding-bottom: 0;
   }
 
   .homeLeft {
