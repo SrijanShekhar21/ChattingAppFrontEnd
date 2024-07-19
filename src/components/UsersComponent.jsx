@@ -37,7 +37,7 @@ function UsersComponent() {
         const response = await axios.get(
           `http://localhost:3000/get-contacts?email=${userEmail}`
         );
-        console.log("Contacts: ", response.data);
+        // console.log("Contacts: ", response.data);
         setContacts(response.data);
       } catch (error) {
         console.error("Error fetching contacts: ", error);
@@ -49,7 +49,7 @@ function UsersComponent() {
   //GET all active users from the server
   useEffect(() => {
     socket.on("active-users", (users) => {
-      console.log("active users: ", users);
+      // console.log("active users: ", users);
       //set active users except me
       setActiveUsers(users.filter((user) => user.email !== userEmail));
     });
@@ -66,7 +66,7 @@ function UsersComponent() {
   //update contacts with active field
   useEffect(() => {
     //update messages with active field
-    console.log("Active users: ", activeUsers);
+    // console.log("Active users: ", activeUsers);
     setContacts((prev) => {
       return prev.map((contact) => {
         let active = false;
@@ -83,7 +83,7 @@ function UsersComponent() {
   //update contacts with typing field
   useEffect(() => {
     //update messages with typing field
-    console.log("Typing users: ", typingUsers);
+    // console.log("Typing users: ", typingUsers);
     setContacts((prev) => {
       return prev.map((contact) => {
         let typing = false;

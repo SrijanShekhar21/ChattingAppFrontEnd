@@ -1,4 +1,4 @@
-import React, { useEffect, useState, useRef } from "react";
+import React, { useEffect, useState, useRef, useCallback } from "react";
 import { useUser } from "../contexts/UserContext";
 import chatUserDP from "../../chatUserDP.jpg";
 import { socket } from "../socket";
@@ -19,7 +19,6 @@ function ChatComponent() {
   const [file, setFile] = useState(null);
   const [showPreview, setShowPreview] = useState(false);
   const { messages, setMessages } = useChats();
-  const bottomRef = useRef(null);
   const { activeUsers } = useUser();
   const { typingUsers } = useUser();
   const { contacts } = useUser();
@@ -30,6 +29,29 @@ function ChatComponent() {
   const [controller, setController] = useState(null);
   const { minimize, setMinimize } = useChats();
 
+  const [offset, setOffset] = useState(0);
+  const limit = 20;
+  const [infiniteLoading, setInfiniteLoading] = useState(false);
+  const [hasMore, setHasMore] = useState(true);
+
+  const observer = useRef();
+  const topMsg = useCallback(
+    (node) => {
+      console.log("node: ", node);
+      if (infiniteLoading) return;
+      if (observer.current) observer.current.disconnect();
+      observer.current = new IntersectionObserver((entries) => {
+        if (entries[0].isIntersecting && hasMore) {
+          setOffset((prev) => prev + limit);
+          console.log("callback offset: ", offset + limit);
+          console.log("fetching more data");
+        }
+      });
+      if (node) observer.current.observe(node);
+    },
+    [infiniteLoading, hasMore]
+  );
+
   const chattingWithName = chattingWith ? JSON.parse(chattingWith).name : null;
   const chattingWithEmail = chattingWith
     ? JSON.parse(chattingWith).email
@@ -39,28 +61,50 @@ function ChatComponent() {
   // fetch the chats with the new user from the server and display it in the chat component
   async function getChats() {
     try {
+      console.log("initial fetch");
       const response = await axios.get(
-        `http://localhost:3000/get-chats?user1=${userEmail}&user2=${chattingWithEmail}`
+        `http://localhost:3000/get-chats?user1=${userEmail}&user2=${chattingWithEmail}&offset=0&limit=${limit}`
       );
       //set this array of messages to the messages state
-      //sort reponse.data based on id
-      response.data.sort((a, b) => a.id - b.id);
-      console.log("Messages fetched: ", response.data);
+      //sort reponse.data based on id in descending order
+      response.data.sort((a, b) => -a.id + b.id);
+      console.log("response.data: ", response.data);
       setMessages(response.data);
     } catch (error) {
       console.log("Error fetching chats from the server: ", error);
     }
   }
   useEffect(() => {
+    setOffset(0);
     getChats();
   }, [chattingWith]);
+
+  const fetchMoreData = async () => {
+    try {
+      console.log("offset: ", offset);
+      console.log("fetching start");
+      const response = await axios.get(
+        `http://localhost:3000/get-chats?user1=${userEmail}&user2=${chattingWithEmail}&offset=${offset}&limit=${limit}`
+      );
+      //sort reponse.data based on id
+      response.data.sort((a, b) => -a.id + b.id);
+      setMessages((prev) => [...prev, ...response.data]);
+      console.log("fetching end");
+    } catch (error) {
+      console.log("Error fetching chats from the server: ", error);
+    }
+  };
+
+  useEffect(() => {
+    fetchMoreData();
+  }, [offset]);
 
   //socket useEffect
   useEffect(() => {
     socket.on("received-private-msg", async (msg) => {
       console.log("received private message: ", msg);
       //add this msg to the messages state
-      setMessages((prev) => [...prev, msg]);
+      setMessages((prev) => [msg, ...prev]);
     });
 
     return () => {
@@ -148,12 +192,6 @@ function ChatComponent() {
     }
   };
 
-  //scroll to bottom useEffect
-  useEffect(() => {
-    bottomRef.current !== null &&
-      bottomRef.current.scrollIntoView({ behavior: "smooth" });
-  }, [messages]);
-
   //handle to show typing...
   const handleTyping = (e) => {
     socket.emit("typing", {
@@ -175,6 +213,7 @@ function ChatComponent() {
     setFile(null);
     setShowPreview(false);
     setUploading(false);
+    setMinimize(false);
     setPercentage(0);
 
     if (controller) {
@@ -233,7 +272,6 @@ function ChatComponent() {
           <div className="chatComponentMidDiv">
             <div className="chatComponentMid">
               {messages.map((msg, index) => {
-                console.log("msg: ", msg);
                 return (
                   ((msg.from_user == userEmail &&
                     msg.to_user == chattingWithEmail) ||
@@ -241,6 +279,7 @@ function ChatComponent() {
                       msg.to_user == userEmail)) &&
                   msg.message && (
                     <div
+                      ref={index === messages.length - 1 ? topMsg : null}
                       key={index}
                       className={`message ${
                         msg.from_user === userEmail
@@ -263,7 +302,6 @@ function ChatComponent() {
                   )
                 );
               })}
-              <div ref={bottomRef} className="scrollToEnd"></div>
             </div>
             {selFile && (
               <div className="filesToolTip">

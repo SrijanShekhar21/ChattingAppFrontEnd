@@ -292,7 +292,7 @@ body {
   z-index: 2;
   top: 0.3rem;
   /* padding: 1rem; */
-  animation-name: slideUp;
+  animation-name: slideLeftIn;
   animation-duration: 0.5s;
   animation-fill-mode: forwards;
   animation-timing-function: cubic-bezier(0.075, 0.82, 0.165, 1);
@@ -390,7 +390,7 @@ body {
   color: white;
 }
 
-@keyframes slideUp {
+@keyframes slideLeftIn {
   0% {
     opacity: 0%;
     left: -5rem;
@@ -595,7 +595,7 @@ body {
 
 .chatComponentMid {
   display: flex;
-  flex-direction: column;
+  flex-direction: column-reverse;
   width: 100%;
   height: 100%;
   overflow-x: hidden;
