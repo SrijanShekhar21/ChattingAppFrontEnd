@@ -140,7 +140,7 @@ body {
 
 .login h1,
 .register h1 {
-  font-size: 3rem;
+  font-size: 1.5rem;
   color: #171923;
 }
 
@@ -574,12 +574,12 @@ body {
   font-size: 0.8rem;
 }
 
-.online,
 .isTyping {
   color: hsl(120, 100%, 45%);
 }
 
-.offline {
+.offline,
+.online {
   color: hsl(0, 0%, 65%);
 }
 
@@ -637,17 +637,17 @@ body {
   background-color: hsl(0, 0%, 90%);
   /* margin-left: 1rem; */
   border-bottom-left-radius: 0;
-  /* box-shadow: 0 1px 1px 1px hsl(0, 0%, 90%); */
+  box-shadow: 0 1px 1px 1px hsl(0, 0%, 85%);
 }
 
 .sentMessage {
   align-self: flex-end;
-  background-color: hsl(240, 50%, 15%);
+  background-color: hsl(111, 91%, 91%);
   backdrop-filter: blur(5px);
   /* margin-right: 1rem; */
   border-bottom-right-radius: 0;
-  color: rgb(255, 255, 255);
-  /* box-shadow: 0 1px 1px 1px hsl(0, 0%, 10%); */
+  color: rgb(0, 0, 0);
+  box-shadow: 0 1px 1px 1px hsl(0, 0%, 85%);
 }
 
 .messageContent {
@@ -1104,7 +1104,8 @@ body {
 
   .login h1,
   .register h1 {
-    font-size: 2rem;
+    font-size: 1.5rem;
+    color: #171923;
   }
 
   .login form,
@@ -1202,10 +1203,6 @@ body {
 }
 
 @media screen and (max-width: 550px) {
-  .app {
-    height: 90vh;
-  }
-
   .home {
     justify-content: flex-start;
   }
@@ -1245,6 +1242,10 @@ body {
     margin: 0;
     padding: 0;
     margin-bottom: 0.5rem;
+  }
+
+  .dashboard {
+    height: 93vh;
   }
 
   .dashLeft {

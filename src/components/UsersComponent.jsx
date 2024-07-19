@@ -130,7 +130,6 @@ function UsersComponent() {
           </label>
           <div className="inputEditDiv">
             <input
-              autoFocus
               onChange={(e) => {
                 setEditName(e.target.value);
               }}
