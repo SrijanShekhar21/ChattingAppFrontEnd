@@ -19,7 +19,7 @@ function Home() {
   async function verifyUser() {
     try {
       const result = await axios.get(
-        `http://localhost:3000/verifyUser?user=${userEmail}`,
+        `https://chatapp-backend-swart-phi.vercel.app/verifyUser?user=${userEmail}`,
         {
           headers: {
             Authorization: `Bearer ${token}`,
