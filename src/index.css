@@ -1163,7 +1163,6 @@ body {
 @media screen and (max-width: 550px) {
   .app {
     height: 90vh;
-    border: 2px solid red;
   }
 
   .home {
