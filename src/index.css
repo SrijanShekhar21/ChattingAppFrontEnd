@@ -1165,16 +1165,38 @@ body {
     height: 90vh;
   }
 
+  .home {
+    justify-content: flex-start;
+  }
+
+  .homeLeft {
+    height: auto;
+  }
+
+  .authDiv {
+    padding: 0;
+    height: auto;
+    margin-top: 1rem;
+  }
+
+  .login form,
+  .register form {
+    margin-top: 0;
+  }
+
   .creator h3 {
     /* border: 2px solid black; */
     margin: 0;
     padding: 0;
+    margin-top: 0.5rem;
   }
   .creator p {
     /* border: 2px solid black; */
     margin: 0;
     padding: 0;
+    margin-bottom: 0.5rem;
   }
+
   .dashLeft {
     position: absolute;
     width: calc(100% - 1rem);
