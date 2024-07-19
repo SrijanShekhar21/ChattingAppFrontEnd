@@ -19,7 +19,7 @@ function Home() {
   async function verifyUser() {
     try {
       const result = await axios.get(
-        `https://chatapp-backend-swart-phi.vercel.app/verifyUser?user=${userEmail}`,
+        `https://chattingappbackend-zkbx.onrender.com/verifyUser?user=${userEmail}`,
         {
           headers: {
             Authorization: `Bearer ${token}`,

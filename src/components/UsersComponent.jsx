@@ -35,7 +35,7 @@ function UsersComponent() {
     async function getUserContacts() {
       try {
         const response = await axios.get(
-          `https://chatapp-backend-swart-phi.vercel.app/get-contacts?email=${userEmail}`
+          `https://chattingappbackend-zkbx.onrender.com/get-contacts?email=${userEmail}`
         );
         // console.log("Contacts: ", response.data);
         setContacts(response.data);
@@ -100,7 +100,7 @@ function UsersComponent() {
   async function handleSave() {
     try {
       const result = await axios.post(
-        `https://chatapp-backend-swart-phi.vercel.app/editProfile?userEmail=${userEmail}&newName=${editName}`
+        `https://chattingappbackend-zkbx.onrender.com/editProfile?userEmail=${userEmail}&newName=${editName}`
       );
       console.log("Profile edited:", result.data);
       setUser(JSON.stringify(result.data));

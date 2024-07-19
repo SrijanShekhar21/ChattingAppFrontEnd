@@ -31,7 +31,7 @@ function Login() {
     };
 
     try {
-      const result = await axios.post("https://chatapp-backend-swart-phi.vercel.app/login", loginUser);
+      const result = await axios.post("https://chattingappbackend-zkbx.onrender.com/login", loginUser);
       const { user, token } = result.data;
 
       setToken(token);

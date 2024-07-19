@@ -22,7 +22,7 @@ function Register() {
 
     try {
       const result = await axios.post(
-        "https://chatapp-backend-swart-phi.vercel.app/register",
+        "https://chattingappbackend-zkbx.onrender.com/register",
         newUser
       );
       console.log("User registered:", result.data);

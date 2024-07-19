@@ -66,7 +66,7 @@ function ChatComponent() {
     try {
       console.log("initial fetch");
       const response = await axios.get(
-        `https://chatapp-backend-swart-phi.vercel.app/get-chats?user1=${userEmail}&user2=${chattingWithEmail}&offset=0&limit=${limit}`
+        `https://chattingappbackend-zkbx.onrender.com/get-chats?user1=${userEmail}&user2=${chattingWithEmail}&offset=0&limit=${limit}`
       );
       //set this array of messages to the messages state
       //sort reponse.data based on id in descending order
@@ -87,7 +87,7 @@ function ChatComponent() {
       console.log("offset: ", offset);
       console.log("fetching start");
       const response = await axios.get(
-        `https://chatapp-backend-swart-phi.vercel.app/get-chats?user1=${userEmail}&user2=${chattingWithEmail}&offset=${offset}&limit=${limit}`
+        `https://chattingappbackend-zkbx.onrender.com/get-chats?user1=${userEmail}&user2=${chattingWithEmail}&offset=${offset}&limit=${limit}`
       );
       //sort reponse.data based on id
       response.data.sort((a, b) => -a.id + b.id);
