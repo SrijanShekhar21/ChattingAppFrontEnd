@@ -418,16 +418,16 @@ body {
   width: 100%;
   height: 10vh;
   overflow-y: auto;
-  scrollbar-width: none;
+  scrollbar-width: thin;
   /* padding-bottom: 5px; */
   border-radius: 1rem;
   background-color: white;
   box-shadow: 0 0 4px 1px hsl(0, 0%, 85%);
 }
 
-.UsersComponent::-webkit-scrollbar {
+/* .UsersComponent::-webkit-scrollbar {
   display: none;
-}
+} */
 
 .contact {
   display: flex;
@@ -599,16 +599,16 @@ body {
   width: 100%;
   height: 100%;
   overflow-x: hidden;
-  scrollbar-width: none;
+  scrollbar-width: thin;
   background-color: white;
   border-radius: 1rem;
   box-shadow: 0 0 4px 1px hsl(0, 0%, 85%);
   padding: 0.5rem;
 }
 
-.chatComponentMid::-webkit-scrollbar {
+/* .chatComponentMid::-webkit-scrollbar {
   display: none;
-}
+} */
 
 .message {
   display: flex;
