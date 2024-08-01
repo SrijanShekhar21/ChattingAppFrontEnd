@@ -197,6 +197,38 @@ body {
   cursor: pointer;
 }
 
+.loaderDiv {
+  width: 100%;
+  height: 100%;
+  top: 0;
+  left: 0;
+  position: absolute;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  background-color: hsla(0, 0%, 100%, 0.1);;
+  backdrop-filter: blur(1px);
+}
+
+.loader {
+  border: 6px solid hsl(0, 0%, 95%); /* Light grey */
+  border-top: 6px solid hsl(0, 0%, 55%); /* Blue */
+  border-radius: 50%;
+  width: 60px;
+  height: 60px;
+  animation: spin 0.5s linear infinite;
+  box-shadow: 0 0 4px 1px hsl(0, 0%, 75%);
+}
+
+@keyframes spin {
+  0% {
+    transform: rotate(0deg);
+  }
+  100% {
+    transform: rotate(360deg);
+  }
+}
+
 .login,
 .register {
   animation-name: slideIn;
@@ -259,10 +291,257 @@ body {
   box-shadow: 0 0 4px 1px hsl(0, 0%, 85%);
 }
 
-.UserDPTabComponent img {
+.userDPTopImg {
   width: 3rem;
   height: 3rem;
   border-radius: 50%;
+}
+
+.addUsers {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  position: relative;
+}
+
+.addUsers img {
+  width: 1.8rem;
+  height: 1.8rem;
+  border-radius: 50%;
+  cursor: pointer;
+}
+
+.addUsers img:hover {
+  box-shadow: 0 0 1px 1px hsl(210, 100%, 50%);
+}
+
+.requestsLength {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  position: absolute;
+  top: -0.2rem;
+  right: -0.5rem;
+  background-color: hsl(125, 100%, 50%);
+  width: 1rem;
+  height: 1rem;
+  font-size: 0.8rem;
+  border-radius: 50%;
+  color: hsl(0, 0%, 100%);
+}
+
+.findUsersBlanket {
+  position: absolute;
+  left: 0;
+  top: 0;
+  height: 100%;
+  width: 100%;
+  z-index: 3;
+  background-color: hsla(240, 95%, 10%, 0.1);
+  backdrop-filter: blur(10px);
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  padding: 2rem 1rem;
+  animation: fadeInAnimation 0.2s;
+  animation-iteration-count: 1;
+  animation-fill-mode: forwards;
+}
+
+@keyframes fadeInAnimation {
+  0% {
+    opacity: 0;
+  }
+  100% {
+    opacity: 1;
+  }
+}
+
+.findUsersDiv {
+  /* border: 2px solid green; */
+  width: 80%;
+  background-color: white;
+  /* border-radius: 1rem; */
+  box-shadow: 0 0 4px 1px hsl(0, 0%, 75%);
+  padding: 0.5rem 1rem;
+  position: relative;
+}
+
+.addFriendsTabs {
+  /* border: 2px solid red; */
+  display: flex;
+  align-items: center;
+  justify-content: space-evenly;
+  margin-bottom: 0.5rem;
+}
+
+.addFriendEachTab {
+  border-bottom: 1px solid hsl(0, 0%, 75%);
+  padding: 0.5rem;
+  cursor: pointer;
+}
+
+.friendReqTab {
+  position: relative;
+}
+
+.requestsLengthAddPlus {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  position: absolute;
+  top: -0.2rem;
+  right: -0.5rem;
+  background-color: hsl(125, 100%, 50%);
+  width: 1rem;
+  height: 1rem;
+  font-size: 0.8rem;
+  border-radius: 50%;
+  color: hsl(0, 0%, 100%);
+}
+
+.closeFindUsers {
+  position: absolute;
+  right: 0.5rem;
+  top: 0.3rem;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  border-radius: 50%;
+  padding: 0.2rem;
+}
+
+.closeFindUsers img {
+  width: 1rem;
+  height: 1rem;
+  cursor: pointer;
+}
+
+.acceptRequest {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+}
+
+.acceptRequestImg {
+  width: 1.6rem;
+  height: 1.6rem;
+  margin-left: 1rem;
+  cursor: pointer;
+}
+.rejectRequestImg {
+  width: 1.5rem;
+  height: 1.5rem;
+  margin-left: 1rem;
+  cursor: pointer;
+}
+
+.findUsersDiv h3 {
+  padding: 0.5rem;
+}
+
+.findUsersInput {
+  display: flex;
+  align-items: center;
+  justify-content: flex-start;
+  border-bottom: 1px solid hsl(0, 0%, 75%);
+  padding: 0.5rem 0.5rem;
+  margin-bottom: 0.5rem;
+}
+
+.findUsersInput input {
+  border: none;
+  width: 100%;
+}
+
+.findUsersInput input:focus {
+  outline: none;
+}
+
+.contactsFoundDiv {
+  /* border: 2px solid red; */
+  display: inline-block;
+  width: 100%;
+  height: 50vh;
+  overflow-y: auto;
+  scrollbar-width: thin;
+  /* padding-bottom: 5px; */
+  /* border-radius: 5px; */
+  background-color: white;
+  margin-bottom: 0.5rem;
+  /* border: 1px solid hsl(0, 0%, 75%); */
+  /* box-shadow: 0 0 2px 1px hsl(0, 0%, 75%); */
+}
+
+.addContactCard {
+  /* border: 2px solid red; */
+  display: flex;
+  align-items: center;
+  justify-content: flex-start;
+  position: relative;
+  /* border-bottom: 0.5px solid hsl(0, 0%, 75%); */
+  background-color: hsl(0, 0%, 100%);
+  position: relative;
+  padding: 0.5rem;
+  border-bottom: 1px solid hsl(0, 0%, 75%);
+  /* border-radius: 5px; */
+  /* box-shadow: 0 0 2px 1px hsl(0, 0%, 75%); */
+}
+
+.addContactCard:hover {
+  background-color: hsl(0, 0%, 95%);
+}
+
+.addUserName {
+  flex-grow: 1;
+}
+
+.addPlus {
+  right: 0;
+  top: 0;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  margin-right: 1rem;
+}
+
+.sendRequest {
+  width: 2rem;
+  height: 2rem;
+  cursor: pointer;
+}
+
+.addContactCardImg {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  position: relative;
+  margin-right: 1rem;
+}
+
+.addContactCardImg img {
+  width: 2.5rem;
+  height: 2.5rem;
+  border-radius: 50%;
+}
+
+.tickCross {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+}
+
+.check {
+  width: 2rem;
+  height: 2rem;
+  margin-right: 0.5rem;
+  cursor: pointer;
+}
+
+.cross {
+  width: 1.85rem;
+  height: 1.85rem;
+  cursor: pointer;
 }
 
 .name {

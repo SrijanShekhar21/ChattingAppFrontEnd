@@ -10,6 +10,7 @@ const chatsContext = createContext();
 
 const ChatsContextProvider = ({ children }) => {
   const [messages, setMessages] = useState([]);
+  const [chattingWith, setChattingWith] = useState({});
   const [minimize, setMinimize] = useState(false);
 
   const ChatsContextValue = useMemo(
@@ -18,8 +19,17 @@ const ChatsContextProvider = ({ children }) => {
       setMessages,
       minimize,
       setMinimize,
+      chattingWith,
+      setChattingWith,
     }),
-    [messages, setMessages, minimize, setMinimize]
+    [
+      messages,
+      setMessages,
+      minimize,
+      setMinimize,
+      chattingWith,
+      setChattingWith,
+    ]
   );
 
   return (

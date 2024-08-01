@@ -7,6 +7,7 @@ import { useAuth } from "../contexts/AuthContext";
 import axios from "axios";
 import { Navigate } from "react-router";
 import { socket } from "../socket";
+import { useURL } from "../contexts/URLContext";
 
 function Home() {
   const [wantLogin, setWantLogin] = useState(true);
@@ -16,16 +17,18 @@ function Home() {
 
   const userEmail = user ? JSON.parse(user).email : null;
 
+  // const _URL = "https://chattingappbackend-zkbx.onrender.com";
+  // const _URL = "http://localhost:3000";
+
+  const { _URL } = useURL();
+
   async function verifyUser() {
     try {
-      const result = await axios.get(
-        `https://chattingappbackend-zkbx.onrender.com/verifyUser?user=${userEmail}`,
-        {
-          headers: {
-            Authorization: `Bearer ${token}`,
-          },
-        }
-      );
+      const result = await axios.get(`${_URL}/verifyUser?user=${userEmail}`, {
+        headers: {
+          Authorization: `Bearer ${token}`,
+        },
+      });
       console.log("result is ", result.data);
       setUser(JSON.stringify(result.data));
       socket.connect();

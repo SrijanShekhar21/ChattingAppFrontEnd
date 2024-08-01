@@ -1,27 +1,21 @@
 import React, { useEffect, useState } from "react";
 import { useAuth } from "../contexts/AuthContext";
 import { useUser } from "../contexts/UserContext";
-import chatUserDP from "../../chatUserDP.jpg";
 import axios from "axios";
 import { socket } from "../socket";
-import { useChats } from "../contexts/chatsContext";
 import ContactCard from "./ContactCard";
 import { useNavigate } from "react-router";
 import DP from "../../DP.jpg";
-import pencil from "../assets/pencil.png";
-import pencil2 from "../assets/pencil-solid.svg";
-
-//plan
-//on click of a new contact, send the chats with the current user to the server and store it in a db
-//then fetch the chats with the new user from the server and display it in the chat component
+import { useFriends } from "../contexts/FriendsContext";
+import { useURL } from "../contexts/URLContext";
+import { useChats } from "../contexts/chatsContext";
 
 function UsersComponent() {
   const navigate = useNavigate();
   const { user, setUser } = useUser();
-  const { activeUsers, setActiveUsers } = useUser();
-  const { contacts, setContacts } = useUser();
-  const { typingUsers, setTypingUsers } = useUser();
   const { setToken } = useAuth();
+  const { myFriends, setMyFriends } = useFriends();
+  const { chattingWith, setChattingWith } = useUser();
 
   const userName = JSON.parse(user).name;
 
@@ -30,77 +24,44 @@ function UsersComponent() {
 
   const userEmail = JSON.parse(user).email;
 
-  //GET all contacts of this user from the server
-  useEffect(() => {
-    async function getUserContacts() {
-      try {
-        const response = await axios.get(
-          `https://chattingappbackend-zkbx.onrender.com/get-contacts?email=${userEmail}`
-        );
-        // console.log("Contacts: ", response.data);
-        setContacts(response.data);
-      } catch (error) {
-        console.error("Error fetching contacts: ", error);
-      }
-    }
-    getUserContacts();
-  }, []);
-
   //GET all active users from the server
   useEffect(() => {
-    socket.on("active-users", (users) => {
-      // console.log("active users: ", users);
-      //set active users except me
-      setActiveUsers(users.filter((user) => user.email !== userEmail));
-    });
+    socket.on("active-users-updated", (user) => {
+      console.log(user.email, " ", chattingWith.friendemail);
+      //update myFriends according to user data
+      setMyFriends((prev) => {
+        return prev.map((friend) => {
+          if (friend.friendemail === user.email) {
+            return {
+              ...friend,
+              friendactive: user.active,
+              lastseen: user.lastseen,
+            };
+          }
+          return friend;
+        });
+      });
 
-    socket.on("typing", (data) => {
-      setTypingUsers(data);
+      //update chattingWith if the user is chatting with the active user
+      if (user.email === chattingWith.friendemail) {
+        console.log("updating chattingWith: ", user);
+        setChattingWith((prev) => {
+          return {
+            ...prev,
+            friendactive: user.active,
+            lastseen: user.lastseen,
+          };
+        });
+      }
     });
-
-    return () => {
-      socket.off("active-users");
-    };
   }, [socket]);
 
-  //update contacts with active field
-  useEffect(() => {
-    //update messages with active field
-    // console.log("Active users: ", activeUsers);
-    setContacts((prev) => {
-      return prev.map((contact) => {
-        let active = false;
-        activeUsers.forEach((user) => {
-          if (user.email === contact.email) {
-            active = true;
-          }
-        });
-        return { ...contact, active };
-      });
-    });
-  }, [activeUsers]);
-
-  //update contacts with typing field
-  useEffect(() => {
-    //update messages with typing field
-    // console.log("Typing users: ", typingUsers);
-    setContacts((prev) => {
-      return prev.map((contact) => {
-        let typing = false;
-        typingUsers.forEach((user) => {
-          if (user.email === contact.email) {
-            typing = true;
-          }
-        });
-        return { ...contact, typing };
-      });
-    });
-  }, [typingUsers]);
+  const { _URL } = useURL();
 
   async function handleSave() {
     try {
       const result = await axios.post(
-        `https://chattingappbackend-zkbx.onrender.com/editProfile?userEmail=${userEmail}&newName=${editName}`
+        `${_URL}/editProfile?userEmail=${userEmail}&newName=${editName}`
       );
       console.log("Profile edited:", result.data);
       setUser(JSON.stringify(result.data));
@@ -108,6 +69,29 @@ function UsersComponent() {
     } catch (error) {
       console.error("Error during saving:", error);
     }
+  }
+
+  function handleLogout() {
+    console.log(userEmail, "disconnected");
+    //get current time
+    const time = new Date().toLocaleTimeString("en-US", {
+      hour: "numeric",
+      minute: "numeric",
+      hour12: true,
+    });
+    console.log("time: ", time);
+    socket.emit("user-disconnect", {
+      email: userEmail,
+      time: time,
+    });
+    socket.disconnect();
+    setChattingWith({});
+    setToken(null);
+    localStorage.removeItem("token");
+    localStorage.removeItem("user");
+    console.log("logged out");
+    setEditProfile(false);
+    navigate("/");
   }
 
   return (
@@ -142,17 +126,7 @@ function UsersComponent() {
 
           <div className="editButtonsDiv">
             <button onClick={handleSave}>Save</button>
-            <button
-              onClick={() => {
-                setEditProfile(false);
-                setToken(null);
-                localStorage.removeItem("token");
-                localStorage.removeItem("user");
-                console.log("logged out");
-                navigate("/");
-              }}
-              className="logout"
-            >
+            <button onClick={handleLogout} className="logout">
               Logout
             </button>
           </div>
@@ -160,13 +134,18 @@ function UsersComponent() {
       )}{" "}
       {
         <div className="UsersComponent">
-          {contacts.length > 0 ? (
-            contacts.map((contact) => {
+          {myFriends.length > 0 ? (
+            myFriends.map((friend) => {
               // console.log("Contact: ", contact);
-              return <ContactCard key={contact.email} contact={contact} />;
+              return (
+                <ContactCard
+                  key={`${friend.useremail}-${friend.friendemail}`}
+                  friend={friend}
+                />
+              );
             })
           ) : (
-            <div className="contact">No active users</div>
+            <div className="contact">You have no friends to talk with</div>
           )}
         </div>
       }

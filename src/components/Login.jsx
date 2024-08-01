@@ -6,24 +6,29 @@ import show from "../assets/show.png";
 import hide from "../assets/hide.png";
 import { socket } from "../socket";
 import { Navigate, useNavigate } from "react-router";
+import { useURL } from "../contexts/URLContext";
 
 function Login() {
   const [email, setEmail] = useState("");
   const [password, setPassword] = useState("");
   const [showPassword, setShowPassword] = useState(false);
   const [error, setError] = useState(null);
+  const [logginIn, setLogginIn] = useState(false);
 
   const navigate = useNavigate();
 
   const { setToken } = useAuth();
   const { setUser } = useUser();
 
-  useEffect(() => {
-    socket.disconnect();
-  }, []);
+  // const _URL = "https://chattingappbackend-zkbx.onrender.com";
+  // const _URL = "http://localhost:3000";
+
+  const { _URL } = useURL();
 
   const handleSubmit = async (e) => {
     e.preventDefault();
+    setLogginIn(true);
+    console.log("logging in: ", email);
 
     const loginUser = {
       email,
@@ -31,7 +36,7 @@ function Login() {
     };
 
     try {
-      const result = await axios.post("https://chattingappbackend-zkbx.onrender.com/login", loginUser);
+      const result = await axios.post(`${_URL}/login`, loginUser);
       const { user, token } = result.data;
 
       setToken(token);
@@ -40,8 +45,13 @@ function Login() {
       localStorage.setItem("user", JSON.stringify(user));
 
       socket.connect();
+      setLogginIn(false);
+      console.log("logged in");
+      socket.connect();
+      socket.emit("user-connected", { email: email });
       navigate("/dashboard");
     } catch (err) {
+      setLogginIn(false);
       console.error(err);
       setToken(null);
       setUser(null);
@@ -53,6 +63,11 @@ function Login() {
 
   return (
     <div className="login">
+      {logginIn && (
+        <div className="loaderDiv">
+          <div className="loader"></div>
+        </div>
+      )}
       <h1>Sign In</h1>
       {error && (
         <p

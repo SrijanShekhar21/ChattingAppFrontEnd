@@ -1,27 +1,29 @@
-import React, { useState } from "react";
+import React, { useEffect, useState } from "react";
 import { useUser } from "../contexts/UserContext";
 import chatUserDP from "../../chatUserDP.jpg";
+import { socket } from "../socket";
+import { useFriends } from "../contexts/FriendsContext";
+import { useChats } from "../contexts/chatsContext";
 
-function ContactCard({ contact }) {
-  const { user, chattingWith, setChattingWith } = useUser();
+function ContactCard({ friend }) {
+  const { user } = useUser();
+  const { chattingWith, setChattingWith } = useUser();
   const { selContactMobile, setSelContactMobile } = useUser();
-  const [activeUsers] = useState([]);
+  const { setMyFriends } = useFriends();
 
   const userEmail = JSON.parse(user).email;
-  const chattingWithEmail = chattingWith
-    ? JSON.parse(chattingWith).email
-    : null;
+  const chattingWithEmail = chattingWith.friendemail;
 
-  async function handleClick(clickedContact) {
-    console.log("Clicked on ", clickedContact);
-    //get id of the clicked contact
+  // setChattingWith(
+  //   JSON.stringify({
+  //     email: user1,
+  //     name: user1name,
+  //   })
+  // );
 
-    const contactUserActive = activeUsers.find(
-      (user) => user.email === clickedContact.email
-    );
-    const contactId = contactUserActive ? contactUserActive.id : null;
-    console.log("Contact id: ", contactId);
-    setChattingWith(JSON.stringify({ id: contactId, ...clickedContact }));
+  async function handleClick(clickedFriend) {
+    console.log("Clicked on ", clickedFriend);
+    setChattingWith(clickedFriend);
     setSelContactMobile(false);
   }
 
@@ -30,10 +32,10 @@ function ContactCard({ contact }) {
       style={{
         cursor: "pointer",
         //bg color yellow if selected
-        backgroundColor: chattingWithEmail === contact.email && "#e6e6e6",
+        backgroundColor: chattingWithEmail === friend.friendemail && "#e6e6e6",
       }}
       onClick={() => {
-        handleClick(contact);
+        handleClick(friend);
       }}
       //class contact to all and active to only active users
       className="contact"
@@ -41,13 +43,15 @@ function ContactCard({ contact }) {
       <div className="imgDp">
         <img src={chatUserDP} alt="" />
         <div
-          className={`activeDot ${contact.active ? "active" : "notActive"}`}
+          className={`activeDot ${
+            friend.friendactive ? "active" : "notActive"
+          }`}
         ></div>
       </div>
 
       <h3>
-        {contact.name}
-        {contact.typing && <span className="typing">Typing...</span>}
+        {friend.friendname}
+        {friend.typing && <span className="typing">Typing...</span>}
       </h3>
       <div className="underline"></div>
     </div>

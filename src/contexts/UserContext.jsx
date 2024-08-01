@@ -10,12 +10,15 @@ const UserContext = createContext();
 
 const UserContextProvider = ({ children }) => {
   const [user, setUser] = useState(localStorage.getItem("user"));
-  const [chattingWith, setChattingWith] = useState(null);
+  const [chattingWith, setChattingWith] = useState({});
   const [typingUsers, setTypingUsers] = useState([]);
   const [editProfile, setEditProfile] = useState(false);
   const [activeUsers, setActiveUsers] = useState([]);
   const [contacts, setContacts] = useState([]);
+  const [friends, setFriends] = useState([]);
   const [selContactMobile, setSelContactMobile] = useState(true);
+  const [findUsers, setFindUsers] = useState(false);
+  const [acceptedFriends, setAcceptedFriends] = useState(friends);
 
   useEffect(() => {
     if (user) {
@@ -41,6 +44,12 @@ const UserContextProvider = ({ children }) => {
       setContacts,
       selContactMobile,
       setSelContactMobile,
+      findUsers,
+      setFindUsers,
+      friends,
+      setFriends,
+      acceptedFriends,
+      setAcceptedFriends,
     }),
     [
       user,
@@ -57,6 +66,12 @@ const UserContextProvider = ({ children }) => {
       setContacts,
       selContactMobile,
       setSelContactMobile,
+      findUsers,
+      setFindUsers,
+      friends,
+      setFriends,
+      acceptedFriends,
+      setAcceptedFriends,
     ]
   );
 

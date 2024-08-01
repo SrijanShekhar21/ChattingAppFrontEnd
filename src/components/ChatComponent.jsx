@@ -15,9 +15,13 @@ import bricks from "../assets/bricks.png";
 import geometry from "../assets/geometry.png";
 import PreviewDiv from "./PreviewDiv";
 import FileMsgDiv from "./FileMsgDiv";
+import ChatComponentTop from "./ChatComponentTop";
+import { useFriends } from "../contexts/FriendsContext";
+import { useURL } from "../contexts/URLContext";
 
 function ChatComponent() {
-  const { user, chattingWith } = useUser();
+  const { user } = useUser();
+  const { chattingWith } = useUser();
   const [message, setMessage] = useState("");
   const [file, setFile] = useState(null);
   const [showPreview, setShowPreview] = useState(false);
@@ -31,6 +35,8 @@ function ChatComponent() {
   const [selFile, setSelFile] = useState(false);
   const [controller, setController] = useState(null);
   const { minimize, setMinimize } = useChats();
+  const { myFriends, setMyFriends } = useFriends();
+  const { friendRequests, setFriendRequests } = useFriends();
 
   const [offset, setOffset] = useState(0);
   const limit = 20;
@@ -55,18 +61,18 @@ function ChatComponent() {
     [infiniteLoading, hasMore]
   );
 
-  const chattingWithName = chattingWith ? JSON.parse(chattingWith).name : null;
-  const chattingWithEmail = chattingWith
-    ? JSON.parse(chattingWith).email
-    : null;
+  const chattingWithName = chattingWith.friendname;
+  const chattingWithEmail = chattingWith.friendemail;
   const userEmail = JSON.parse(user).email;
+
+  const { _URL } = useURL();
 
   // fetch the chats with the new user from the server and display it in the chat component
   async function getChats() {
     try {
       console.log("initial fetch");
       const response = await axios.get(
-        `https://chattingappbackend-zkbx.onrender.com/get-chats?user1=${userEmail}&user2=${chattingWithEmail}&offset=0&limit=${limit}`
+        `${_URL}/get-chats?user1=${userEmail}&user2=${chattingWithEmail}&offset=0&limit=${limit}`
       );
       //set this array of messages to the messages state
       //sort reponse.data based on id in descending order
@@ -87,7 +93,7 @@ function ChatComponent() {
       console.log("offset: ", offset);
       console.log("fetching start");
       const response = await axios.get(
-        `https://chattingappbackend-zkbx.onrender.com/get-chats?user1=${userEmail}&user2=${chattingWithEmail}&offset=${offset}&limit=${limit}`
+        `${_URL}/get-chats?user1=${userEmail}&user2=${chattingWithEmail}&offset=${offset}&limit=${limit}`
       );
       //sort reponse.data based on id
       response.data.sort((a, b) => -a.id + b.id);
@@ -134,9 +140,10 @@ function ChatComponent() {
       filetype: null,
       filename: null,
     };
+
     console.log("File: ", file);
     message != "" && socket.emit("send-private-message", currMsg);
-    message != "" && console.log("Sending message: ", message);
+    message != "" && console.log("Sending message: ", currMsg);
     setMessage("");
 
     if (file && !uploading) {
@@ -231,45 +238,7 @@ function ChatComponent() {
       {chattingWithName ? (
         <>
           <div className="chatComponentTopDiv">
-            <div className="chatComponentTop">
-              <div className="imgDp">
-                <img
-                  onClick={() => {
-                    setSelContactMobile(true);
-                  }}
-                  className="backArrow"
-                  src={backArrow}
-                  alt=""
-                />
-                <img className="chatUserDP" src={chatUserDP} alt="" />
-                <div
-                  className={`activeDot ${
-                    activeUsers.find((user) => user.email === chattingWithEmail)
-                      ? "active"
-                      : "notActive"
-                  }`}
-                ></div>
-              </div>
-              <div className="chattinWithNameDiv">
-                <h3>{chattingWithName}</h3>
-                {typingUsers.find(
-                  (user) => user.email === chattingWithEmail
-                ) ? (
-                  <p className="isTyping">typing...</p>
-                ) : activeUsers.find(
-                    (user) => user.email === chattingWithEmail
-                  ) ? (
-                  <p className="online">Online</p>
-                ) : (
-                  <p className="offline">
-                    Last seen{" "}
-                    {contacts.find(
-                      (contact) => contact.email === chattingWithEmail
-                    ).lastseen || "N/A"}
-                  </p>
-                )}
-              </div>
-            </div>
+            <ChatComponentTop />
           </div>
 
           <div className="chatComponentMidDiv">

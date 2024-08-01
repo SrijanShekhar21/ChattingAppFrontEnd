@@ -2,6 +2,7 @@ import React, { useState } from "react";
 import axios from "axios";
 import show from "../assets/show.png";
 import hide from "../assets/hide.png";
+import { useURL } from "../contexts/URLContext";
 
 function Register() {
   const [email, setEmail] = useState("");
@@ -10,6 +11,11 @@ function Register() {
   const [showPassword, setShowPassword] = useState(false);
   const [error, setError] = useState(null);
   const [success, setSuccess] = useState(null);
+
+  // const _URL = "https://chattingappbackend-zkbx.onrender.com";
+  // const _URL = "http://localhost:3000";
+
+  const { _URL } = useURL();
 
   async function handleSubmit(e) {
     e.preventDefault();
@@ -21,10 +27,7 @@ function Register() {
     };
 
     try {
-      const result = await axios.post(
-        "https://chattingappbackend-zkbx.onrender.com/register",
-        newUser
-      );
+      const result = await axios.post(`${_URL}/register`, newUser);
       console.log("User registered:", result.data);
       if (result.status === 200) {
         setSuccess("User Registered Successfully!");
